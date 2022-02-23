@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../axios';
 
-const Exercise = props => (
-  <tr>
-    <td>{props.exercise.username}</td>
-    <td>{props.exercise.description}</td>
-    <td>{props.exercise.duration}</td>
-    <td>{props.exercise.date.substring(0,10)}</td>
-    <td>
-      <Link to={"/edit/"+props.exercise._id}>edit</Link> | <a href="#" onClick={() => { props.deleteExercise(props.exercise._id) }}>delete</a>
-    </td>
-  </tr>
-)
+const Exercise = props => {
+  const exercise = props.exercise;
+  return (
+    <tr>
+      <td>{exercise.username}</td>
+      <td>{exercise.description}</td>
+      <td>{exercise.duration}</td>
+      <td>{exercise.date.substring(0,10)}</td>
+      <td>
+        <Link to={`/edit/${exercise._id}`}>edit</Link> | <a href="#" onClick={() => { props.deleteExercise(exercise._id) }}>delete</a>
+      </td>
+    </tr> 
+  )
+}
 
 export default class ExercisesList extends Component {
   constructor(props) {
@@ -24,7 +27,7 @@ export default class ExercisesList extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/exercises/')
+    axios.get('exercises/')
       .then(response => {
         this.setState({ exercises: response.data })
       })
@@ -34,7 +37,7 @@ export default class ExercisesList extends Component {
   }
 
   deleteExercise(id) {
-    axios.delete('http://localhost:5000/exercises/'+id)
+    axios.delete(`exercises/${id}`)
       .then(response => { console.log(response.data)});
 
     this.setState({
